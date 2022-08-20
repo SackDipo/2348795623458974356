@@ -7,6 +7,7 @@
     + Improved resolver
     + Improved animation system 
     + Reworked doubletap
+    + New coder
     
   + Visuals
     + Added new menu
@@ -19,9 +20,5 @@
     + Changed clantag
     + Changed clientstate
     + Reworked sdk
-    + Added cl_move hook
-    + Removed L3D451R7 antipaste
-    + Reworked setupbones
-
     
   
