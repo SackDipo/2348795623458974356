@@ -3,6 +3,7 @@
 class misc : public singleton <misc> 
 {
 public:
+	//void anti_exploit();
 	void watermark();
 	void NoDuck(CUserCmd* cmd);
 	void ChatSpamer();

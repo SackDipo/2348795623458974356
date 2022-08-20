@@ -232,6 +232,36 @@ int aim::get_minimum_damage(bool visible, int health)
 	return minimum_damage;
 }
 
+//void aim::two_shot() {
+//	if (vars.ragebot.two_shot) {
+//		for (auto i = 1; i < m_globals()->m_maxclients; i++)
+//		{
+//			auto e = static_cast<player_t*>(m_entitylist()->GetClientEntity(i));
+//
+//			if (csgo.globals.current_weapon == WEAPON_G3SG1 && csgo.globals.current_weapon == WEAPON_SCAR20)
+//				csgo.globals.weapon[csgo.globals.current_weapon].minimum_visible_damage = e->m_iHealth() / 2 + 1;
+//			else
+//				csgo.globals.weapon[csgo.globals.current_weapon].minimum_visible_damage;
+//		}
+//	}
+//}
+
+void aim::anti_exploit()
+{
+	static auto is_command_set = false;
+	if (is_command_set != vars.ragebot.anti_exploit)
+	{
+		auto old_team = csgo.local()->m_iTeamNum();
+
+		std::string command = "kill; jointeam 1; cl_lagcompensation ";
+		command += std::to_string(vars.ragebot.anti_exploit ? 0 : 1) + ";";
+		command += "jointeam " + std::to_string(old_team) + "; ";
+
+		m_engine()->ExecuteClientCmd(command.data());
+		is_command_set = vars.ragebot.anti_exploit;
+	}
+}
+
 void aim::scan_targets()
 {
 	if (targets.empty())
@@ -552,6 +582,27 @@ std::vector <int> aim::get_hitboxes(adjust_data* record, bool optimized)
 		hitboxes.emplace_back(HITBOX_LEFT_FOOT);
 	}
 
+	if (vars.ragebot.weapon[hooks::rage_weapon].rage_aimbot_ignore_limbs)
+	{
+		bool ignore_limbs = record->player->m_vecVelocity().Length2D() > 71.f && (!(record->player->m_fFlags() & FL_ONGROUND));
+
+		if (!ignore_limbs)
+		{
+			hitboxes.emplace_back(HITBOX_LEFT_UPPER_ARM), false;
+			hitboxes.emplace_back(HITBOX_RIGHT_UPPER_ARM), false;
+		}
+		else if (!ignore_limbs)
+		{
+			hitboxes.emplace_back(HITBOX_LEFT_FOOT), false;
+			hitboxes.emplace_back(HITBOX_RIGHT_FOOT), false;
+		}
+		else if (!ignore_limbs)
+		{
+			hitboxes.emplace_back(HITBOX_LEFT_CALF), false;
+			hitboxes.emplace_back(HITBOX_RIGHT_CALF), false;
+		}
+	}
+
 	return hitboxes;
 }
 
@@ -609,12 +660,16 @@ std::vector <scan_point> aim::get_points(adjust_data* record, int hitbox, bool f
 	{
 		auto scale = 0.0f;
 
-		if (vars.ragebot.weapon[csgo.globals.current_weapon].static_point_scale)
+		if (!vars.ragebot.weapon[hooks::rage_weapon].adaptive_point_scale)
 		{
-			if (hitbox == HITBOX_HEAD)
-				scale = vars.ragebot.weapon[csgo.globals.current_weapon].head_scale;
-			else
-				scale = vars.ragebot.weapon[csgo.globals.current_weapon].body_scale;
+			scale = bbox->radius * math::random_float(0.25f, 0.75f);
+		}
+		else if (vars.ragebot.weapon[csgo.globals.current_weapon].static_point_scale) {
+			{
+				if (hitbox == HITBOX_HEAD)
+					scale = vars.ragebot.weapon[csgo.globals.current_weapon].head_scale;
+				else
+					scale = vars.ragebot.weapon[csgo.globals.current_weapon].body_scale; }
 		}
 		else
 		{

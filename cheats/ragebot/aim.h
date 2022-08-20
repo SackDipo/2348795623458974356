@@ -161,6 +161,8 @@ class aim : public singleton <aim>
 	void prepare_targets();
 	adjust_data* get_record(std::deque <adjust_data>* records, bool history);
 	int get_minimum_damage(bool visible, int health);
+	void two_shot();
+	void anti_exploit();
 	void scan_targets();
 	bool automatic_stop(CUserCmd* cmd);
 	void find_best_target();

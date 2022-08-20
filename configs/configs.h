@@ -287,7 +287,7 @@ struct Config
 		struct weapon_t
 		{
 			int priority;
-
+			//int minimum_visible_damage;
 			bool auto_stop;
 
 			int fov_type;
@@ -318,6 +318,7 @@ struct Config
 		bool autowall;
 		bool zeus_bot;
 		bool anti_exploit;
+		bool two_shot;
 		bool knife_bot;
 		bool autoshoot;
 		bool double_tap;
@@ -346,8 +347,11 @@ struct Config
 			bool static_point_scale;
 			float head_scale;
 			float body_scale;
+			bool adaptive_point_scale;
+			bool rage_aimbot_ignore_limbs;
 			bool max_misses;
 			int max_misses_amount;
+			//float adaptive_point_scale;
 			bool prefer_safe_points;
 			bool prefer_body_aim;
 			bool autostop;

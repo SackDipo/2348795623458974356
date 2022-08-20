@@ -1527,6 +1527,13 @@ void c_menu::draw(bool is_open)
 									ImGui::SliderFloat(crypt_str("Head scale"), &vars.ragebot.weapon[hooks::rage_weapon].head_scale, 0.0f, 1.0f, vars.ragebot.weapon[hooks::rage_weapon].head_scale ? crypt_str("%.2f") : crypt_str("None"));
 									ImGui::SliderFloat(crypt_str("Body scale"), &vars.ragebot.weapon[hooks::rage_weapon].body_scale, 0.0f, 1.0f, vars.ragebot.weapon[hooks::rage_weapon].body_scale ? crypt_str("%.2f") : crypt_str("None"));
 								}
+
+								ImGui::Checkbox(crypt_str("Adaptive point scale"), &vars.ragebot.weapon[hooks::rage_weapon].adaptive_point_scale);
+								ImGui::Checkbox(crypt_str("Enable max misses"), &vars.ragebot.weapon[hooks::rage_weapon].max_misses);
+								if (vars.ragebot.weapon[hooks::rage_weapon].max_misses)
+									ImGui::SliderInt(crypt_str("Max misses"), &vars.ragebot.weapon[hooks::rage_weapon].max_misses_amount, 0, 6);
+
+								ImGui::Checkbox(crypt_str("Ignore limbs when moving"), &vars.ragebot.weapon[hooks::rage_weapon].rage_aimbot_ignore_limbs);
 								ImGui::Checkbox(crypt_str("Prefer body aim"), &vars.ragebot.weapon[hooks::rage_weapon].prefer_body_aim);
 								ImGui::Checkbox(crypt_str("Prefer safe point"), &vars.ragebot.weapon[hooks::rage_weapon].prefer_safe_points);
 
@@ -1592,9 +1599,6 @@ void c_menu::draw(bool is_open)
 							ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + 295, pad.y + 54 + 20 * stab_anim));
 							ImGui::MenuChild(crypt_str("Exploit"), ImVec2(290, 198 - 20 * stab_anim));
 							{
-
-								ImGui::Checkbox(crypt_str("Anti-Exploit"), &vars.ragebot.anti_exploit);
-
 								ImGui::Checkbox(crypt_str("HS"), &vars.antiaim.hide_shots);
 								ImGui::SameLine();
 								draw_keybind(crypt_str(""), &vars.antiaim.hide_shots_key, crypt_str("##HOTKEY_HIDESHOTS"));
@@ -1607,6 +1611,8 @@ void c_menu::draw(bool is_open)
 								if (vars.ragebot.double_tap) {
 									ImGui::Checkbox(crypt_str("Instant"), &vars.ragebot.dt_teleport);
 								}
+
+								ImGui::Checkbox(crypt_str("Anti-defensive"), &vars.ragebot.anti_exploit);
 							}
 							ImGui::EndMenuChild();
 
