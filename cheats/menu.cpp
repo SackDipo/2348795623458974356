@@ -1592,6 +1592,9 @@ void c_menu::draw(bool is_open)
 							ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + 295, pad.y + 54 + 20 * stab_anim));
 							ImGui::MenuChild(crypt_str("Exploit"), ImVec2(290, 198 - 20 * stab_anim));
 							{
+
+								ImGui::Checkbox(crypt_str("Anti-Exploit"), &vars.ragebot.anti_exploit);
+
 								ImGui::Checkbox(crypt_str("HS"), &vars.antiaim.hide_shots);
 								ImGui::SameLine();
 								draw_keybind(crypt_str(""), &vars.antiaim.hide_shots_key, crypt_str("##HOTKEY_HIDESHOTS"));
@@ -1764,19 +1767,26 @@ void c_menu::draw(bool is_open)
 						}
 						ImGui::EndMenuChild();
 						ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), pad.y + 332));
-						ImGui::MenuChild(vars.antiaim.antiaim_type ? crypt_str("Not available in Legit Mode ") : crypt_str("Direcion"), ImVec2(290, 122));
+						ImGui::MenuChild(vars.antiaim.antiaim_type ? crypt_str("Not available in Legit Mode ") : crypt_str("Fake Lag"), ImVec2(290, 122));
 						{
 							if (!vars.antiaim.antiaim_type) {
-								//ImGui::Checkbox(crypt_str("Manual indicator"), &vars.antiaim.flip_indicator);
-								//ImGui::SameLine();
-								//ImGui::ColorEdit(crypt_str("##invc"), &vars.antiaim.flip_indicator_color, ALPHA);
-								//ImGui::SetCursorPosX(8); ImGui::Text("Manual back");
-								//draw_keybind(crypt_str("Manual back"), &vars.antiaim.manual_back, crypt_str("##HOTKEY_INVERT_BACK"));
-								//ImGui::SetCursorPosX(8); ImGui::Text("Manual left");
-								//draw_keybind(crypt_str("Manual left"), &vars.antiaim.manual_left, crypt_str("##HOTKEY_INVERT_LEFT"));
-								//ImGui::SetCursorPosX(8); ImGui::Text("Manual right");
-								//draw_keybind(crypt_str("Manual right"), &vars.antiaim.manual_right, crypt_str("##HOTKEY_INVERT_RIGHT"));
-								ImGui::Text("In developing");
+								ImGui::Checkbox(crypt_str("Enable fakelag"), &vars.antiaim.fakelag);
+								if (vars.antiaim.fakelag)
+								{
+									draw_combo(crypt_str("Fake-lag type"), vars.antiaim.fakelag_type, fakelags, ARRAYSIZE(fakelags));
+									ImGui::SliderInt(crypt_str("Limit"), &vars.antiaim.fakelag_amount, 1, 14);
+
+									draw_multicombo(crypt_str("Fake-lag triggers"), vars.antiaim.fakelag_enablers, lagstrigger, ARRAYSIZE(lagstrigger), preview);
+
+									auto enabled_fakelag_triggers = false;
+
+									for (auto i = 0; i < ARRAYSIZE(lagstrigger); i++)
+										if (vars.antiaim.fakelag_enablers[i])
+											enabled_fakelag_triggers = true;
+
+									if (enabled_fakelag_triggers)
+										ImGui::SliderInt(crypt_str("Triggers limit"), &vars.antiaim.triggers_fakelag_amount, 1, 14);
+								}
 
 							}
 
@@ -1831,23 +1841,6 @@ void c_menu::draw(bool is_open)
 										ImGui::SliderInt(crypt_str("Inverted desync switch range"), &vars.antiaim.type[type].inverted_desync_spin_range, 1, 60);
 									}
 								}
-							}
-							ImGui::Checkbox(crypt_str("Enable fakelag"), &vars.antiaim.fakelag);
-							if (vars.antiaim.fakelag)
-							{
-								draw_combo(crypt_str("Fake-lag type"), vars.antiaim.fakelag_type, fakelags, ARRAYSIZE(fakelags));
-								ImGui::SliderInt(crypt_str("Limit"), &vars.antiaim.fakelag_amount, 1, 14);
-
-								draw_multicombo(crypt_str("Fake-lag triggers"), vars.antiaim.fakelag_enablers, lagstrigger, ARRAYSIZE(lagstrigger), preview);
-
-								auto enabled_fakelag_triggers = false;
-
-								for (auto i = 0; i < ARRAYSIZE(lagstrigger); i++)
-									if (vars.antiaim.fakelag_enablers[i])
-										enabled_fakelag_triggers = true;
-
-								if (enabled_fakelag_triggers)
-									ImGui::SliderInt(crypt_str("Triggers limit"), &vars.antiaim.triggers_fakelag_amount, 1, 14);
 							}
 						}
 						ImGui::EndMenuChild();
@@ -2806,6 +2799,7 @@ void c_menu::draw(bool is_open)
 		}
 		ImGui::EndGroup(/*MAIN SPACE END*/);
 	}
+
 	ImGui::End();
 	ImGui::PopStyleVar();
 }

@@ -67,10 +67,10 @@ void misc::ChatSpamer()
 
 	static std::string chatspam[] = 
 	{ 
-		crypt_str("limehook - stay with us or lose the game."),
-		crypt_str("Get good. Get limehook."),
+		crypt_str("Elysium - stay with us or lose the game."),
+		crypt_str("cope. Get Elysium."),
 		crypt_str("limehook - just the best."),
-		crypt_str("Go to another level with limehook."),
+		crypt_str("Go to another level with Elysium."),
 	};
 
 	static auto lastspammed = 0;

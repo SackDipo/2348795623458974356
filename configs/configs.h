@@ -317,6 +317,7 @@ struct Config
 		int field_of_view;
 		bool autowall;
 		bool zeus_bot;
+		bool anti_exploit;
 		bool knife_bot;
 		bool autoshoot;
 		bool double_tap;
